@@ -12,20 +12,27 @@
         <h1>🎥 Get Connected</h1>
         <p>Conecta con tu equipo de forma segura y rápida</p>
 
+        <input type="text" id="nameInput" placeholder="¿Cómo te llamas?" />
         <input type="text" id="roomInput" placeholder="Ingresa el código de sala..." />
         <button onclick="joinRoom()">Entrar a la reunión</button>
     </div>
 
 <script>
     function joinRoom() {
+        const name = document.getElementById("nameInput").value.trim();
         const room = document.getElementById("roomInput").value.trim();
+
+        if (!name) {
+            alert("Por favor, ingresa tu nombre 😌");
+            return;
+        }
 
         if (!room) {
             alert("Por favor, ingresa un código de sala 😌");
             return;
         }
 
-        window.location.href = `meeting.html?room=${encodeURIComponent(room)}`;
+        window.location.href = `meeting.html?room=${encodeURIComponent(room)}&name=${encodeURIComponent(name)}`;
     }
 
     // Permitir Enter para unirse

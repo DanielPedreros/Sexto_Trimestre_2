@@ -2,6 +2,7 @@ const socket = io();
 
 const params = new URLSearchParams(window.location.search);
 const roomId = params.get("room");
+const displayName = (params.get("name") || "Invitado").trim();
 
 const localVideo = document.getElementById("localVideo");
 const videoGrid = document.getElementById("videoGrid");
@@ -23,14 +24,25 @@ async function start() {
 
     localVideo.srcObject = localStream;
 
-    socket.emit("join-room", roomId);
+    // Mostrar nombre local
+    const localNameEl = document.getElementById("localName");
+    if (localNameEl) localNameEl.textContent = displayName;
+
+    // Unir a la sala enviando también el nombre
+    socket.emit("join-room", { roomId, name: displayName });
 }
 
-socket.on("user-connected", userId => {
+socket.on("user-connected", user => {
+    const userId = (typeof user === "object" && user.id) ? user.id : user;
+    const name = (typeof user === "object" && user.name) ? user.name : "Invitado";
+
     createPeerConnection(userId, true);
+    createRemotePlaceholder(userId, name);
 });
 
-socket.on("user-disconnected", userId => {
+socket.on("user-disconnected", data => {
+    const userId = (typeof data === "object" && data.id) ? data.id : data;
+
     // Cerrar la conexión peer
     if (peerConnections[userId]) {
         peerConnections[userId].close();
@@ -85,16 +97,34 @@ function createPeerConnection(userId, initiator) {
     });
 
     pc.ontrack = event => {
-        // Verificar si ya tenemos un video para este usuario
-        if (!remoteVideos[userId]) {
+        let container = remoteVideos[userId];
+        let videoEl;
+
+        if (container) {
+            videoEl = container.querySelector('video');
+        } else {
+            // Si no existe contenedor, crear uno genérico
             const video = document.createElement("video");
             video.id = `video-${userId}`;
-            video.srcObject = event.streams[0];
             video.autoplay = true;
             video.playsinline = true;
-            videoGrid.appendChild(video);
-            remoteVideos[userId] = video;
+
+            const nameDiv = document.createElement('div');
+            nameDiv.className = 'name-overlay';
+            nameDiv.textContent = 'Invitado';
+
+            container = document.createElement('div');
+            container.className = 'video-container';
+            container.id = `container-${userId}`;
+            container.appendChild(video);
+            container.appendChild(nameDiv);
+            videoGrid.appendChild(container);
+
+            remoteVideos[userId] = container;
+            videoEl = video;
         }
+
+        videoEl.srcObject = event.streams[0];
     };
 
     pc.onicecandidate = event => {
@@ -145,6 +175,15 @@ function toggleCamera() {
         isCameraOff = !isCameraOff;
         cameraBtn.style.background = isCameraOff ? "#d32f2f" : "#3c4043";
         cameraBtn.textContent = isCameraOff ? "📷❌" : "📷";
+        // Mostrar overlay local cuando cámara apagada
+        const localContainer = document.getElementById('localContainer');
+        if (localContainer) {
+            if (isCameraOff) localContainer.classList.add('camera-off');
+            else localContainer.classList.remove('camera-off');
+        }
+
+        // Informar a otros peers
+        socket.emit('camera-toggle', { roomId, isCameraOff });
     }
 }
 
@@ -166,3 +205,37 @@ function leaveCall() {
 }
 
 start();
+
+// Crear placeholder remoto con nombre (si se conoce antes del track)
+function createRemotePlaceholder(userId, name) {
+    if (remoteVideos[userId]) return;
+
+    const video = document.createElement("video");
+    video.id = `video-${userId}`;
+    video.autoplay = true;
+    video.playsinline = true;
+
+    const nameDiv = document.createElement('div');
+    nameDiv.className = 'name-overlay';
+    nameDiv.textContent = name || 'Invitado';
+
+    const container = document.createElement('div');
+    container.className = 'video-container';
+    container.id = `container-${userId}`;
+    container.appendChild(video);
+    container.appendChild(nameDiv);
+
+    videoGrid.appendChild(container);
+    remoteVideos[userId] = container;
+}
+
+// Recibir notificación cuando otro usuario apaga/enciende su cámara
+socket.on('camera-toggled', data => {
+    const userId = data.userId;
+    const isOff = data.isCameraOff;
+    const container = remoteVideos[userId];
+    if (container) {
+        if (isOff) container.classList.add('camera-off');
+        else container.classList.remove('camera-off');
+    }
+});
