@@ -2,6 +2,7 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Reunión - Get Connected</title>
     <link rel="stylesheet" href="styles.css">
 </head>
@@ -9,8 +10,8 @@
 <body class="meeting-body">
 
 <header class="meeting-header">
-    <h1>Get Connected</h1>
-    <p>En reunión</p>
+    <h1>🎥 Get Connected</h1>
+    <p id="status">En reunión...</p>
 </header>
 
 <div class="video-grid" id="videoGrid">
@@ -18,9 +19,9 @@
 </div>
 
 <div class="controls">
-    <button id="muteBtn" class="control-btn">🎤</button>
-    <button id="cameraBtn" class="control-btn">📷</button>
-    <button id="leaveBtn" class="leave-btn">📞</button>
+    <button id="muteBtn" class="control-btn" title="Mutear micrófono">🎤</button>
+    <button id="cameraBtn" class="control-btn" title="Desactivar cámara">📷</button>
+    <button id="leaveBtn" class="leave-btn control-btn" title="Colgar">📞</button>
 </div>
 
 <script src="/socket.io/socket.io.js"></script>

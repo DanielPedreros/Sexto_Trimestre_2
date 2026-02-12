@@ -2,29 +2,38 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Get Connected</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Get Connected - Videoconferencias</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body class="home">
 
     <div class="home-container">
-        <h1>Get Connected</h1>
+        <h1>🎥 Get Connected</h1>
+        <p>Conecta con tu equipo de forma segura y rápida</p>
 
-        <input type="text" id="roomInput" placeholder="Código de sala">
-        <button onclick="joinRoom()">Entrar</button>
+        <input type="text" id="roomInput" placeholder="Ingresa el código de sala..." />
+        <button onclick="joinRoom()">Entrar a la reunión</button>
     </div>
 
 <script>
     function joinRoom() {
-        const room = document.getElementById("roomInput").value;
+        const room = document.getElementById("roomInput").value.trim();
 
         if (!room) {
-            alert("Escribe un código 😌");
+            alert("Por favor, ingresa un código de sala 😌");
             return;
         }
 
-        window.location.href = `meeting.html?room=${room}`;
+        window.location.href = `meeting.html?room=${encodeURIComponent(room)}`;
     }
+
+    // Permitir Enter para unirse
+    document.getElementById("roomInput").addEventListener("keypress", function(event) {
+        if (event.key === "Enter") {
+            joinRoom();
+        }
+    });
 </script>
 
 </body>
