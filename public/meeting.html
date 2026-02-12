@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Reunión - Get Connected</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body class="meeting-body">
+
+<header class="meeting-header">
+    <h1>Get Connected</h1>
+    <p>En reunión</p>
+</header>
+
+<div class="video-grid" id="videoGrid">
+    <video id="localVideo" autoplay muted playsinline></video>
+</div>
+
+<div class="controls">
+    <button id="muteBtn" class="control-btn">🎤</button>
+    <button id="cameraBtn" class="control-btn">📷</button>
+    <button id="leaveBtn" class="leave-btn">📞</button>
+</div>
+
+<script src="/socket.io/socket.io.js"></script>
+<script src="client.js"></script>
+
+</body>
+</html>

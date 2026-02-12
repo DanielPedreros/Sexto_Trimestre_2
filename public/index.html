@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Get Connected</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="home">
+
+    <div class="home-container">
+        <h1>Get Connected</h1>
+
+        <input type="text" id="roomInput" placeholder="Código de sala">
+        <button onclick="joinRoom()">Entrar</button>
+    </div>
+
+<script>
+    function joinRoom() {
+        const room = document.getElementById("roomInput").value;
+
+        if (!room) {
+            alert("Escribe un código 😌");
+            return;
+        }
+
+        window.location.href = `meeting.html?room=${room}`;
+    }
+</script>
+
+</body>
+
+</html>

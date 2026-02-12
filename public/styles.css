@@ -1,0 +1,79 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Segoe UI", sans-serif;
+}
+
+body {
+    background: #1f1f1f;
+    color: white;
+}
+
+/* HOME */
+
+.home {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.home-container {
+    text-align: center;
+}
+
+.home h1 {
+    font-size: 48px;
+    margin-bottom: 30px;
+}
+
+.home button {
+    padding: 15px 30px;
+    font-size: 18px;
+    border-radius: 12px;
+    border: none;
+    background: #0b57d0;
+    color: white;
+    cursor: pointer;
+}
+
+/* MEETING */
+
+header {
+    text-align: center;
+    padding: 15px;
+    background: #2b2b2b;
+}
+
+.video-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 15px;
+    padding: 20px;
+}
+
+video {
+    width: 100%;
+    border-radius: 16px;
+    background: black;
+}
+
+.controls {
+    height: 100px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+}
+
+.controls button {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    border: none;
+    background: #3c4043;
+    color: white;
+    font-size: 22px;
+    cursor: pointer;
+}
